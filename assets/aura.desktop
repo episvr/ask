@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Aura
+Comment=Instant AI Assistant
+Exec=aura
+Icon=aura
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=false
+SingleMainWindow=true
+X-GNOME-SingleWindow=true

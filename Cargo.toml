@@ -1,0 +1,38 @@
+[package]
+name = "episvr-ask"
+version = "0.1.0"
+authors = ["episvr"]
+edition = "2021"
+
+[lib]
+name = "ask_core"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1.0"
+dirs = "5.0"
+
+clap = { version = "4.5", features = ["derive"] }
+
+config = "0.14"
+
+is-terminal = "0.4"
+
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
+futures-util = "0.3"
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+tokio = { version = "1.37", features = ["macros", "rt-multi-thread"] }
+
+gtk4 = "0.8"
+glib = "0.19"
+pulldown-cmark = "0.10"
+
+[profile.release]
+lto = true        # 开启链接时优化，减小体积并提升性能
+strip = true      # 自动剥离符号表，显著减小二进制体积
+codegen-units = 1 # 牺牲编译速度换取更好的优化
+panic = "abort"   # 发生 panic 时直接终止，减小体积（去除 unwind 代码）
+
