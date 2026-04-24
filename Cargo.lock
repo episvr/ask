@@ -416,6 +416,7 @@ dependencies = [
  "glib",
  "gtk4",
  "is-terminal",
+ "once_cell",
  "pulldown-cmark",
  "reqwest",
  "serde",

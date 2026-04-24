@@ -1,5 +1,6 @@
 use pulldown_cmark::{Event, Parser, Tag, TagEnd};
 use std::fmt::Write;
+use crate::constants::{heading_size, BULLET, MONOSPACE_FAMILY};
 
 pub fn markdown_to_pango(markdown: &str) -> String {
     let parser = Parser::new(markdown);
@@ -10,23 +11,18 @@ pub fn markdown_to_pango(markdown: &str) -> String {
             Event::Start(tag) => match tag {
                 Tag::Paragraph => {}
                 Tag::Heading { level, .. } => {
-                    let size = match level {
-                        pulldown_cmark::HeadingLevel::H1 => "160%",
-                        pulldown_cmark::HeadingLevel::H2 => "140%",
-                        pulldown_cmark::HeadingLevel::H3 => "120%",
-                        _ => "110%",
-                    };
+                    let size = heading_size(level);
                     let _ = write!(output, "\n<span weight='bold' size='{}'>", size);
                 }
                 Tag::Strong => output.push_str("<b>"),
                 Tag::Emphasis => output.push_str("<i>"),
                 Tag::CodeBlock(_) => {
-                    output.push_str("\n<span font_family='monospace'>");
+                    let _ = write!(output, "\n<span font_family='{}'>", MONOSPACE_FAMILY);
                 }
                 Tag::List(_) => {
                     output.push_str("\n");
                 }
-                Tag::Item => output.push_str("• "),
+                Tag::Item => output.push_str(BULLET),
                 Tag::Link { dest_url, .. } => {
                     let _ = write!(output, "<a href='{}'>", escape_pango(&dest_url));
                 }
@@ -36,7 +32,7 @@ pub fn markdown_to_pango(markdown: &str) -> String {
                 TagEnd::Paragraph => output.push_str("\n\n"),
                 TagEnd::Heading(_) => output.push_str("</span>\n"),
                 TagEnd::Strong => output.push_str("</b>"),
-                TagEnd::Emphasis => output.push_str("<i>"),
+                TagEnd::Emphasis => output.push_str("</i>"),
                 TagEnd::CodeBlock => output.push_str("</span>\n\n"),
                 TagEnd::List(_) => output.push_str("\n"),
                 TagEnd::Item => output.push_str("\n"),

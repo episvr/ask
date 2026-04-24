@@ -6,6 +6,14 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use crate::config::AppConfig;
 use futures_util::StreamExt;
+use once_cell::sync::Lazy;
+
+static HTTP_CLIENT: Lazy<Client> = Lazy::new(|| {
+    Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()
+        .expect("Failed to build global HTTP client")
+});
 
 #[derive(Serialize)]
 pub struct ChatRequest {
@@ -46,10 +54,7 @@ pub struct Delta {
 }
 
 pub async fn query_gpt(config: &Arc<AppConfig>, system_prompt: &str, user_content: &str) -> Result<String> {
-    let client = Client::builder()
-        .timeout(Duration::from_secs(30))
-        .build()
-        .context("Failed to build HTTP client")?;
+    let client = &*HTTP_CLIENT;
 
     let request_body = ChatRequest {
         model: config.model.clone(),
@@ -95,10 +100,7 @@ pub async fn query_gpt_stream(
     user_content: String,
     callback: impl Fn(String) + 'static,
 ) -> Result<()> {
-    let client = Client::builder()
-        .timeout(Duration::from_secs(30))
-        .build()
-        .context("Failed to build HTTP client")?;
+    let client = &*HTTP_CLIENT;
 
     let request_body = ChatRequest {
         model: config.model.clone(),
