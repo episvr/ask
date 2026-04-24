@@ -63,4 +63,6 @@ fn escape_pango(input: &str) -> String {
     input.replace("&", "&amp;")
          .replace("<", "&lt;")
          .replace(">", "&gt;")
+         .replace("\'", "&apos;")
+         .replace("\"", "&quot;")
 }

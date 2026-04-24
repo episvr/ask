@@ -48,9 +48,14 @@ pub fn build_ui(app: &Application, config: Arc<AppConfig>) {
     });
 
     window.connect_is_active_notify(move |win| {
-        // 失去焦点时自动隐藏 (Spotlight 风格)
+        // 失去焦点时延迟隐藏
         if !win.is_active() && win.is_visible() {
-            win.set_visible(false);
+            let win_clone = win.clone();
+            glib::timeout_add_local_once(std::time::Duration::from_millis(200), move || {
+                if !win_clone.is_active() && win_clone.is_visible() {
+                    win_clone.set_visible(false);
+                }
+            });
         }
     });
 
