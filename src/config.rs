@@ -9,6 +9,8 @@ pub struct AppConfig {
     pub api_base: String,
     #[serde(default = "default_model")]
     pub model: String,
+    #[serde(default = "default_system_prompt_string")]
+    pub system_prompt: String,
 }
 
 pub const DEFAULT_SYSTEM_PROMPT: &str = "\
@@ -17,6 +19,8 @@ Answer naturally and casually, like a human. \
 Avoid robotic phrases or formal intros. \
 Be concise but friendly. \
 No fluff, no filler, just the answer.";
+
+fn default_system_prompt_string() -> String { DEFAULT_SYSTEM_PROMPT.to_string() }
 
 fn default_api_base() -> String { "https://api.openai.com/v1".to_string() }
 fn default_model() -> String { "gpt-4o-mini".to_string() }
@@ -31,8 +35,6 @@ pub fn load_config() -> Result<std::sync::Arc<AppConfig>> {
             settings = settings.add_source(File::from(config_path));
         }
     }
-
-    // 不再从环境变量读取配置；仅使用配置文件
 
     let config = settings.build()?;
     

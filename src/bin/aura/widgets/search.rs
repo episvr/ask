@@ -98,8 +98,8 @@ pub fn attach_handlers(
 
                 label.set_markup(THINKING_MARKUP);
 
-                            let system_prompt = ask_core::config::DEFAULT_SYSTEM_PROMPT;
                             let config_clone = Arc::clone(&config);
+                            let system_prompt = config.system_prompt.clone();
                             let label_for_async = label.clone();
                             let label_for_chunks = label_for_async.clone();
                             let label_for_error = label_for_async.clone();

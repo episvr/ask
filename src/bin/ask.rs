@@ -3,7 +3,7 @@ use clap::Parser;
 use is_terminal::IsTerminal;
 use std::io::{self, Read};
 
-use ask_core::config::{load_config, DEFAULT_SYSTEM_PROMPT};
+use ask_core::config::load_config;
 use ask_core::api::query_gpt;
 
 // --- CLI Structure ---
@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
     }
 
     // 4. Determine System Prompt
-    let system_prompt = cli.prompt.as_deref().unwrap_or(DEFAULT_SYSTEM_PROMPT);
+    let system_prompt = cli.prompt.as_deref().unwrap_or(&config.system_prompt);
 
     // 5. Call API
     let answer = query_gpt(&config, system_prompt, &input_content).await?;
