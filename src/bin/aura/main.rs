@@ -18,8 +18,12 @@ async fn main() -> Result<()> {
     let config = load_config()?;
 
     app.connect_activate(move |app| {
-        // 如果窗口已存在，直接展示（单例模式）
-        if let Some(window) = app.active_window() {
+        // 如果已有任意顶层窗口，直接展示并激活它
+        let existing = app
+            .active_window()
+            .or_else(|| app.windows().first().cloned());
+
+        if let Some(window) = existing {
             window.set_visible(true);
             window.present();
             return;
